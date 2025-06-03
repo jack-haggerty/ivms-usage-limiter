@@ -3,7 +3,7 @@
   Monitors for iVMS-4200 launch and enforces a 30-minute runtime limit.
 
 .DESCRIPTION
-  Uses WMI event subscriptions to detect when iVMS-4200.Framework.C.exe starts.
+  Uses WMI event subscriptions to detect wehn iVMS-4200.Framework.C.exe starts.
   After 30 minutes, terminates all related processes - including CrashServerDamon 
   and other iVMS-4200.* modules.  Designed for bandwidth senstive or shared environments.
   Logs all actions to local file.
@@ -15,7 +15,7 @@
 
 # === Configuration ===
 $triggerProcess = "iVMS-4200.Framework.C.exe"
-$killAfter = 60 * 30    # 30 minutes
+$killAfter = 60    # 30 minutes
 $logPath = "C:\Logs\ivms-usage-limiter.log"
 
 # === Logging Function ===
@@ -45,7 +45,7 @@ while ($true) {
         Log "Waiting for $triggerProcess to launch..."
 
         # Wait for process start event (up to 1 hr)
-        $event = Wait-Event -SourceIdentifer "iVMSWatch" -Timeout 3600
+        $event = Wait-Event -SourceIdentifier "iVMSWatch" -Timeout 3600
 
         if ($event -ne $null) {
             $ivmsPid = $event.SourceEventArgs.NewEvent.ProcessID
@@ -57,7 +57,7 @@ while ($true) {
             $processPatterns = @("iVMS-4200.*", "CrashServerDamon")
             $targets = Get-Process | Where-Object {
                 $name = $_.ProcessName
-                $processPatterns | ForEach-Object { if ($name -like _$) {return $true}}
+                $processPatterns | ForEach-Object { if ($name -like $_) {return $true}}
                 }
 
                 if ($targets.Count -gt 0) {
@@ -72,6 +72,7 @@ while ($true) {
                         # Clean up WMI event subscription
                         Unregister-Event -SourceIdentifier "iVMSWatch" -ErrorAction SilentlyContinue
                         Remove-Event -SourceIdentifier "iVMSWatch" -ErrorAction SilentlyContinue
+                    }
                 } else {
                     Log "Timeout: No iVMS launch detected within the hour."
                 }
@@ -81,14 +82,6 @@ while ($true) {
             Start-Sleep -Seconds 10
     }
   }
-
-
-
-
-
-
-
-
 
 
 
