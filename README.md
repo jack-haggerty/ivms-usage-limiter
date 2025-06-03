@@ -15,3 +15,29 @@ Rather than relying on manual reminders, this script ensures iVMS is automatical
 - Logs actions to: `C:\Logs\ivms-usage-limiter.log`.
 
 ---
+
+## Deployment
+
+### Requirements
+- Windows machine
+- Administrator privileges
+- PowerShell execution policy must allow script execution (handled automatically)
+
+---
+
+### Installation Steps
+
+1. **Download or Clone the Repository**
+   ```powershell
+   git clone https://github.com/your-username/ivms-terminator.git
+   cd ivms-terminator
+2. **Run the Setup Script as Administrator
+   This script will:
+  
+    - Create `C:\Scripts` if it doesn’t exist  
+    - Copy the necessary PowerShell scripts to `C:\Scripts`  
+    - Register a scheduled task named `iVMS-Terminator` to run at startup as `SYSTEM`
+  
+   ```powershell
+    Set-ExecutionPolicy Bypass -Scope Process -Force
+    .\setup-task.ps1
