@@ -53,8 +53,8 @@ while ($true) {
 
             Start-Sleep -Seconds $killAfter
 
-            # Kill all iVMS-related and CrashServerDamon processes
-            $processPatterns = @("iVMS-4200.*", "CrashServerDamon")
+            # Kill all iVMS-related processes simultaneously
+            $processPatterns = @("iVMS-4200.*", "CrashServerDamon", "nginx", "WatchDog")
             $targets = Get-Process | Where-Object {
                 $name = $_.ProcessName
                 $processPatterns | ForEach-Object { if ($name -like $_) {return $true}}
